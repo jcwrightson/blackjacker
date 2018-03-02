@@ -242,8 +242,8 @@ if __name__ == '__main__':
     newGame.add_player('Player')
 
     # Settings
-    no_of_games = 100
-    echo_game = False
+    no_of_games = 10
+    echo_game = True
 
     # Lets Play!!
     def play():
@@ -266,5 +266,3 @@ if __name__ == '__main__':
 
     # Show results
     newGame.print_log()
-
-
