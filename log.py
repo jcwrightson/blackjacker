@@ -109,18 +109,15 @@ class Log:
 
     def print_log(self):
 
-        print("\n##############################")
-        print("#        BLACKJACKER         #")
-        print("##############################\n")
-
         print("Games Played: ", len(self.house_hands), "\nSplits: ",
               (len(self.player_hands) - len(self.house_hands)))
         print("......................................", "\n")
 
         print('Player BlackJacks: ', self.no_of_player_blackjacks())
-        print('Player Busts: ', self.no_of_player_busts())
-        print('Player Wins: ', self.no_of_player_wins())
         print('House BlackJacks: ', self.no_of_house_blackjacks())
-        print('House Busts: ', self.no_of_house_busts())
+        print('Player Wins: ', self.no_of_player_wins())
         print('House Wins: ', self.no_of_house_wins())
+        print('Player Busts: ', self.no_of_player_busts())
+        print('House Busts: ', self.no_of_house_busts())
+
 

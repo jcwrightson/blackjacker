@@ -2,13 +2,14 @@ from blackjack import BlackJack
 from game import Game
 from log import Log
 
+
 if __name__ == '__main__':
 
     # Settings
-    no_of_games = 500
+    no_of_games = 10
     no_of_decks = 6
     allow_splitting = True
-    echo_game = True
+    echo_game = False
 
     #Logging
     log = Log()
@@ -35,15 +36,15 @@ if __name__ == '__main__':
             newGame.show_status()
 
 
-    for y in range(no_of_games):
-        play()
+    # for y in range(no_of_games):
+    #     play()
 
 
     # while not newGame.has_split:
     #     play()
 
-    # while log.no_of_player_blackjacks() != 10:
-    #     play()
+    while log.no_of_player_wins() != 1000:
+        play()
 
     # Show results
     log.print_log()

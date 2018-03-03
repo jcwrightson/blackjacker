@@ -7,6 +7,10 @@ class BlackJack:
 
     def __init__(self, no_of_decks, allow_splitting):
 
+        print("\n##############################")
+        print("#        BLACKJACKER         #")
+        print("##############################\n")
+
         self.no_of_decks = no_of_decks
         self.allow_splitting = allow_splitting
 
@@ -57,14 +61,16 @@ class BlackJack:
 
     def basic_strategy(self, player):
 
+        dealers_up_card = Cards().get_card_value(self.house.hand.cards[1])
+
         def should_hit_hard(h):
             if player.hands[h].score < 12:
                 return True
             else:
-                if player.hands[h].score < 17 and Cards().get_card_value(self.house.hand.cards[1]) > 6:
+                if player.hands[h].score < 17 and dealers_up_card > 6:
                     return True
                 else:
-                    if player.hands[h].score == 12 and Cards().get_card_value(self.house.hand.cards[1]) < 4:
+                    if player.hands[h].score == 12 and dealers_up_card < 4:
                         return True
 
             return False
@@ -73,15 +79,38 @@ class BlackJack:
             if player.hands[h].score < 17:
                 return True
             else:
-                if player.hands[h].score == 18 and Cards().get_card_value(self.house.hand.cards[1]) < 8:
+                if player.hands[h].score == 18 and dealers_up_card < 8:
                     return True
             return False
 
         def should_split():
+            player_total = Cards().get_card_value(player.hands[0].cards[0]) + Cards().get_card_value(
+                player.hands[0].cards[1])
 
             if len(player.hands[0].cards) == 2:
+
                 if player.hands[0].cards[0] == player.hands[0].cards[1]:
-                    return True
+
+                    if isinstance(player.hands[0].cards[0], int) and isinstance(player.hands[0].cards[1], int):
+
+                        if player_total <= 6 and dealers_up_card < 8:
+                            return True
+                        else:
+                            if player_total == 12 and dealers_up_card < 7:
+                                if dealers_up_card != 2:
+                                    return True
+                            else:
+                                if player_total == 14 and dealers_up_card < 8:
+                                    return True
+                            if player_total > 14:
+                                if player_total == 18 and (dealers_up_card == 7 or dealers_up_card == 11 or dealers_up_card == 10):
+                                    return False
+                                if player_total == 20:
+                                    return False
+                                return True
+                    else:
+                        if player.hands[0].cards[0] == 'A':
+                            return True
 
             return False
 
@@ -91,23 +120,22 @@ class BlackJack:
             self.hit(player, 0, False)
             self.hit(player, 1, False)
 
+        def is_soft(hand):
+            for h in range(len(hand.cards)):
+                return hand.cards[h] == 'A'
+            return False
+
         for h in range(len(player.hands)):
 
             if isinstance(player.hands[h].calculate_score(), int):
-                    if len(player.hands[h].cards) == 2:
-                        if isinstance(player.hands[h].cards[0], int) and isinstance(player.hands[h].cards[1], int):
 
-                            if should_hit_hard(h):
-                                self.hit(player, h, self.basic_strategy)
+                if is_soft(player.hands[h]):
+                    if should_hit_soft(h):
+                        self.hit(player, h, self.basic_strategy)
+                else:
+                    if should_hit_hard(h):
+                        self.hit(player, h, self.basic_strategy)
 
-                        else:
-
-                            if should_hit_soft(h):
-                                self.hit(player, h, self.basic_strategy)
-                    else:
-
-                        if should_hit_hard(h):
-                            self.hit(player, h, self.basic_strategy)
 
     def hit(self, player, h, cb):
 
