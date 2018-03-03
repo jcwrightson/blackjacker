@@ -1,16 +1,20 @@
 from blackjack import BlackJack
 from game import Game
-
+from log import Log
 
 if __name__ == '__main__':
 
     # Settings
-    no_of_games = 10
+    no_of_games = 500
     no_of_decks = 6
+    allow_splitting = True
     echo_game = True
 
+    #Logging
+    log = Log()
+
     # Init new game
-    newGame = BlackJack(no_of_decks)
+    newGame = BlackJack(no_of_decks, allow_splitting)
 
     # Add new player
     newGame.add_player('Player')
@@ -25,7 +29,7 @@ if __name__ == '__main__':
 
         newGame.dealer_stand_soft_17(newGame.house)
 
-        newGame.log_game(Game(newGame.house, newGame.players[0]))
+        log.log_game(Game(newGame.house, newGame.players[0]))
 
         if echo_game:
             newGame.show_status()
@@ -34,5 +38,12 @@ if __name__ == '__main__':
     for y in range(no_of_games):
         play()
 
+
+    # while not newGame.has_split:
+    #     play()
+
+    # while log.no_of_player_blackjacks() != 10:
+    #     play()
+
     # Show results
-    newGame.print_log()
+    log.print_log()

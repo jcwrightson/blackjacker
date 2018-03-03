@@ -1,13 +1,15 @@
 # BlackJacker
-### A BlackJack AI written in Python.
+### A Black Jack AI
 
-    Choose number of card decks, typically 6-8.
-    Choose number of games to simulate.
-    Choose to print out each game or not.
+## Features
 
-    Dealer stands on soft 17.
-    Player follows basic strategy.
+- Choose number of card decks to simulate
+- Shuffle happens once per game deck generation
+- Results and or print each game on screen
+- Log API that allows conditional play until ?
 
-    Results shown at the end.
-    
 
+## Strategies
+
+- Dealer Stand on soft 17
+- Basic Strategy (Splitting optional)

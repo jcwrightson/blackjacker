@@ -1,51 +1,33 @@
+from hand import Hand
+
+
 class Player:
     def __init__(self, name, dealer):
 
         self.dealer = dealer
         self.name = name
-        self.hand = []
-        self.score = 0
+
+        if dealer:
+            self.hand = Hand()
+            self.score = 0
+        else:
+            self.hands = [Hand()]
+            self.scores = []
+        # self.hand = Hand()
+
         self.has_blackjack = False
         self.is_bust = False
         self.winner = False
         self.draw = False
 
+    def split(self):
+        if not self.dealer:
+            self.hands.append(Hand())
 
-    def replace_hand(self, new_hand):
-        self.hand = new_hand
-        return self.hand
+            card_to_split = self.hands[0].cards[1]
+            del self.hands[0].cards[1]
 
-    def extend_hand(self, new_card):
-        return self.hand.extend(new_card)
+            self.hands[1].cards.append(card_to_split)
 
-    def set_score(self, score):
-        self.score = score
-        return self.score
-
-    def calculate_score(self):
-
-        self.score = 0
-
-        for x in range(len(self.hand)):
-            if isinstance(self.hand[x], int):
-                self.score = self.score + self.hand[x]
-            else:
-                if self.hand[x] != 'A':
-                    self.score = self.score + 10
-                else:
-                    if self.score + 11 > 21:
-                        self.score = self.score + 1
-                    else:
-                        self.score = self.score + 11
-
-        if self.score == 21 and len(self.hand) == 2:
-            if isinstance(self.hand[0], str) and isinstance(self.hand[1], str):
-                self.has_blackjack = True
-                return "BlackJack"
-        else:
-            if self.score > 21:
-                self.is_bust = True
-                return "Bust"
-        return self.score
 
 
