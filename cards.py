@@ -24,8 +24,8 @@ class Cards:
                             deck.append(y)
         return deck
 
-    def generate_game(self, decks):
-        for x in range(decks):
+    def generate_game(self, no_of_decks):
+        for x in range(no_of_decks):
             self.deck.extend(self.generate_deck())
 
         self.shuffle(self.deck)

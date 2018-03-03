@@ -10,7 +10,7 @@ class BlackJack:
         print("#        BLACKJACKER         #")
         print("##############################\n")
 
-        self.no_decks = no_of_decks
+        self.no_of_decks = no_of_decks
 
         self.cards = Cards().generate_game(no_of_decks)
         self.players = []
@@ -45,7 +45,7 @@ class BlackJack:
         if len(self.players) != 0:
 
             if (len(self.players) + 1) * 2 > len(self.cards):
-                self.cards = Cards().generate_game(self.no_decks)
+                self.cards = Cards().generate_game(self.no_of_decks)
 
             for z in range(len(self.players)):
                 self.players[z] = Player(self.players[z].name, False)
@@ -104,7 +104,7 @@ class BlackJack:
     def twist(self, player):
 
         if len(self.cards) == 0:
-            self.cards = Cards().generate_game(self.no_decks)
+            self.cards = Cards().generate_game(self.no_of_decks)
 
         player.extend_hand([self.cards[0]])
         del self.cards[0]
@@ -227,42 +227,3 @@ class BlackJack:
         print('House Busts: ', house_busts, '/', len(self.house_hands))
 
 
-class Game:
-    def __init__(self, house, player):
-        self.house = house
-        self.player = player
-
-
-if __name__ == '__main__':
-
-    # Init new game with 8 decks
-    newGame = BlackJack(8)
-
-    # Add new player, multiple players / hands in progress
-    newGame.add_player('Player')
-
-    # Settings
-    no_of_games = 10
-    echo_game = True
-
-    # Lets Play!!
-    def play():
-
-        newGame.deal()
-
-        for x in range(len(newGame.players)):
-            newGame.stick_or_twist(newGame.players[x])
-
-        newGame.stick_or_twist(newGame.house)
-
-        newGame.log_game(Game(newGame.house, newGame.players[0]))
-
-        if echo_game:
-            newGame.show_status()
-
-
-    for y in range(no_of_games):
-        play()
-
-    # Show results
-    newGame.print_log()
