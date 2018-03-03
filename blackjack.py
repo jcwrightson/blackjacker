@@ -59,7 +59,12 @@ class BlackJack:
                 self.house.extend_hand([self.cards[0]])
                 del self.cards[0]
 
-    def stick_or_twist(self, player):
+    def dealer_stand_soft_17(self, player):
+        if isinstance(player.calculate_score(), int):
+            if player.score < 17:
+                self.hit(player, self.dealer_stand_soft_17)
+
+    def basic_strategy(self, player):
 
         def should_hit_hard():
             if player.score < 12:
@@ -82,26 +87,22 @@ class BlackJack:
             return False
 
         if isinstance(player.calculate_score(), int):
-            if player.dealer:
-                if player.score < 17:
-                    self.twist(player)
-            else:
                 if len(player.hand) == 2:
                     if isinstance(player.hand[0], int) and isinstance(player.hand[1], int):
 
                         if should_hit_hard():
-                            self.twist(player)
+                            self.hit(player, self.basic_strategy)
 
                     else:
 
                         if should_hit_soft():
-                            self.twist(player)
+                            self.hit(player, self.basic_strategy)
                 else:
 
                     if should_hit_hard():
-                        self.twist(player)
+                        self.hit(player, self.basic_strategy)
 
-    def twist(self, player):
+    def hit(self, player, cb):
 
         if len(self.cards) == 0:
             self.cards = Cards().generate_game(self.no_of_decks)
@@ -109,7 +110,7 @@ class BlackJack:
         player.extend_hand([self.cards[0]])
         del self.cards[0]
 
-        self.stick_or_twist(player)
+        cb(player)
 
     def find_winner(self):
 
