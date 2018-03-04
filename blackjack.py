@@ -1,6 +1,7 @@
 from player import Player
 from cards import Cards
-
+from purse import Purse
+from game import Game
 
 
 class BlackJack:
@@ -16,21 +17,21 @@ class BlackJack:
 
         self.cards = Cards().generate_game(no_of_decks)
         self.players = []
-        self.house = Player('House', True)
+        self.house = Player('House', True, 0, False)
 
         self.has_split = False
 
-    def add_player(self, name):
+        self.games_played = 0
 
-        self.players.append(Player(name, False))
+    def add_player(self, name, purse, bet_per_hand):
+
+        self.players.append(Player(name, False, purse, bet_per_hand))
         return self.players
 
     def deal(self):
 
-        self.house = Player('House', True)
-
-        # for p in range(len(self.players)):
-        #     self.players[p].hands = [Hand()]
+        self.house.reset()
+        self.games_played = self.games_played + 1
 
         if len(self.players) != 0:
 
@@ -38,10 +39,13 @@ class BlackJack:
                 self.cards = Cards().generate_game(self.no_of_decks)
 
             for z in range(len(self.players)):
-                self.players[z] = Player(self.players[z].name, False)
+                self.players[z].reset()
+                self.players[z].purse.reset_wager()
+                self.players[z].bet(1)
 
             for y in range(2):
                 for x in range(len(self.players)):
+
 
                     self.players[x].hands[0].extend_hand([self.cards[0]])
                     del self.cards[0]
@@ -53,6 +57,7 @@ class BlackJack:
 
         if not player.dealer:
             player.split()
+
 
     def dealer_stand_soft_17(self, player):
         if isinstance(player.hand.calculate_score(), int):
@@ -137,6 +142,7 @@ class BlackJack:
                         self.hit(player, h, self.basic_strategy)
 
 
+
     def hit(self, player, h, cb):
 
         if len(self.cards) == 0:
@@ -151,6 +157,45 @@ class BlackJack:
         if cb:
             cb(player)
 
+    def find_winner(self, game):
+
+        for h in range(len(game.player.hands)):
+            if game.player.hands[h].has_blackjack and not game.house.hand.has_blackjack:
+                game.house.purse.spend(3 * game.player.bet_per_hand)
+                game.player.purse.collect(3 * game.player.bet_per_hand)
+                game.player.purse.collect_wager(1)
+            else:
+                if game.player.hands[h].is_bust:
+
+                    self.house.purse.collect(1 * game.player.bet_per_hand)
+                    game.player.purse.collect_wager(1)
+
+                    if not game.house.hand.is_bust:
+                        self.house.purse.collect(1 * game.player.bet_per_hand)
+                        game.player.purse.collect_wager(1)
+                else:
+                    if game.house.hand.is_bust:
+
+                        game.player.purse.collect(2 * game.player.bet_per_hand)
+                        game.player.purse.collect_wager(1)
+                    else:
+                        if game.house.hand.score > game.player.hands[h].score:
+                            # self.house_wins.append(True)
+                            # self.player_wins.append(False)
+
+                            self.house.purse.collect(1 * game.player.bet_per_hand)
+                            game.player.purse.collect_wager(1)
+                        else:
+                            if game.house.hand.score == game.player.hands[h].score:
+
+                                game.player.purse.collect(1 * game.player.bet_per_hand)
+                                game.house.purse.spend(1 * game.player.bet_per_hand)
+                                game.player.purse.collect_wager(1)
+
+                            else:
+                                game.player.purse.collect(2 * game.player.bet_per_hand)
+                                game.house.purse.spend(2 * game.player.bet_per_hand)
+                                game.player.purse.collect_wager(1)
 
     def show_status(self):
 

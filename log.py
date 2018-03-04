@@ -18,6 +18,11 @@ class Log:
 
         self.draws = []
 
+        self.player_purse = []
+        self.house_purse = []
+
+        self.last_game = False
+
     def log_game(self, game):
 
         game.house.hand.calculate_score()
@@ -25,6 +30,9 @@ class Log:
         self.house_scores.append(game.house.hand.score)
         self.house_blackjacks.append(game.house.hand.has_blackjack)
         self.house_busts.append(game.house.hand.is_bust)
+
+        self.player_purse.append(game.player.purse.value)
+        self.house_purse.append(game.house.purse.value)
 
         for h in range(len(game.player.hands)):
 
@@ -36,6 +44,8 @@ class Log:
             self.player_busts.append(game.player.hands[h].is_bust)
 
         self.find_winner(game)
+
+        self.last_game = game
 
     def find_winner(self, game):
 
@@ -109,8 +119,7 @@ class Log:
 
     def print_log(self):
 
-        print("Games Played: ", len(self.house_hands), "\nSplits: ",
-              (len(self.player_hands) - len(self.house_hands)))
+        print("\nSplits: ", (len(self.player_hands) - len(self.house_hands)))
         print("......................................", "\n")
 
         print('Player BlackJacks: ', self.no_of_player_blackjacks())
@@ -119,5 +128,10 @@ class Log:
         print('House Wins: ', self.no_of_house_wins())
         print('Player Busts: ', self.no_of_player_busts())
         print('House Busts: ', self.no_of_house_busts())
+
+        # print('Player Purse: ', self.player_purse[len(self.player_purse)-1])
+        print('Player Purse: ', self.last_game.player.purse.value)
+        print('House Purse: ', self.last_game.house.purse.value)
+        # print('House Purse: ', self.house_purse[len(self.house_purse)-1])
 
 
