@@ -12,9 +12,3 @@ class Purse:
         self.value = self.value - amount
         self.wager = self.wager + amount
         return self.value
-
-    def reset_wager(self):
-        self.wager = 0
-
-    def collect_wager(self, amount):
-        self.wager = self.wager - amount

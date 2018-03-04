@@ -15,11 +15,6 @@ class Player:
             self.hands = [Hand()]
             self.bet_per_hand = bet_per_hand
 
-        self.has_blackjack = False
-        self.is_bust = False
-        self.winner = False
-        self.draw = False
-
     def reset(self):
         if self.dealer:
             self.hand = Hand()
@@ -41,7 +36,6 @@ class Player:
         return self.purse.value
 
     def win(self, amount):
-        # self.purse.collect(amount * (self.bet_per_hand * odds))
         self.purse.collect(amount * self.bet_per_hand)
         return self.purse.value
 

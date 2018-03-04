@@ -4,8 +4,8 @@ class Hand:
         self.score = 0
         self.has_blackjack = False
         self.is_bust = False
-        # self.winner = False
-        # self.draw = False
+        self.winner = False
+        self.draw = False
 
     def extend_hand(self, new_card):
         return self.cards.extend(new_card)
@@ -27,9 +27,10 @@ class Hand:
                         self.score = self.score + 11
 
         if self.score == 21 and len(self.cards) == 2:
-            if isinstance(self.cards[0], str) and isinstance(self.cards[1], str):
-                self.has_blackjack = True
-                return "BlackJack"
+            # if isinstance(self.cards[0], str) and isinstance(self.cards[1], str):
+            if self.cards[0] == 'A' or self.cards[1] == 'A':
+                    self.has_blackjack = True
+                    return "BlackJack"
         else:
             if self.score > 21:
                 self.is_bust = True

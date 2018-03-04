@@ -40,7 +40,6 @@ class BlackJack:
 
             for z in range(len(self.players)):
                 self.players[z].reset()
-                self.players[z].purse.reset_wager()
                 self.players[z].bet(1)
 
             for y in range(2):
@@ -157,45 +156,49 @@ class BlackJack:
         if cb:
             cb(player)
 
-    def find_winner(self, game):
+    def find_winning_hands(self, game):
 
-        for h in range(len(game.player.hands)):
-            if game.player.hands[h].has_blackjack and not game.house.hand.has_blackjack:
-                game.house.purse.spend(3 * game.player.bet_per_hand)
-                game.player.purse.collect(3 * game.player.bet_per_hand)
-                game.player.purse.collect_wager(1)
+
+        for x in range(len(game.player.hands)):
+            if game.player.hands[x].is_bust:
+                if game.house.hand.is_bust:
+                    game.player.hands[x].draw = True
             else:
-                if game.player.hands[h].is_bust:
+                if game.house.hand.is_bust:
+                    game.player.hands[x].winner = True
 
-                    self.house.purse.collect(1 * game.player.bet_per_hand)
-                    game.player.purse.collect_wager(1)
+                if game.player.hands[x].has_blackjack and not game.house.hand.has_blackjack:
+                    game.player.hands[x].winner = True
 
-                    if not game.house.hand.is_bust:
-                        self.house.purse.collect(1 * game.player.bet_per_hand)
-                        game.player.purse.collect_wager(1)
+                if game.player.hands[x].has_blackjack and game.house.hand.has_blackjack:
+                    game.player.hands[x].draw = True
                 else:
-                    if game.house.hand.is_bust:
-
-                        game.player.purse.collect(2 * game.player.bet_per_hand)
-                        game.player.purse.collect_wager(1)
+                    if game.player.hands[x].score == game.house.hand.score:
+                        game.player.hands[x].draw = True
                     else:
-                        if game.house.hand.score > game.player.hands[h].score:
-                            # self.house_wins.append(True)
-                            # self.player_wins.append(False)
+                        if game.player.hands[x].score > game.house.hand.score:
+                            game.player.hands[x].winner = True
 
-                            self.house.purse.collect(1 * game.player.bet_per_hand)
-                            game.player.purse.collect_wager(1)
-                        else:
-                            if game.house.hand.score == game.player.hands[h].score:
+        self.tally_pots(game)
 
-                                game.player.purse.collect(1 * game.player.bet_per_hand)
-                                game.house.purse.spend(1 * game.player.bet_per_hand)
-                                game.player.purse.collect_wager(1)
 
-                            else:
-                                game.player.purse.collect(2 * game.player.bet_per_hand)
-                                game.house.purse.spend(2 * game.player.bet_per_hand)
-                                game.player.purse.collect_wager(1)
+    def tally_pots(self, game):
+
+        for x in range(len(game.player.hands)):
+
+            if game.player.hands[x].winner:
+                if game.player.hands[x].has_blackjack:
+                    game.player.win(3)
+                    game.house.purse.spend(2 * game.player.bet_per_hand)
+                else:
+                    game.player.win(2)
+                    game.house.purse.spend(1 * game.player.bet_per_hand)
+            else:
+                if game.player.hands[x].draw:
+                    game.player.win(1)
+                    # game.house.purse.collect(1 * game.player.bet_per_hand)
+                else:
+                    game.house.purse.collect(1 * game.player.bet_per_hand)
 
     def show_status(self):
 

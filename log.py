@@ -43,31 +43,10 @@ class Log:
             self.player_scores.append(game.player.hands[h].score)
             self.player_busts.append(game.player.hands[h].is_bust)
 
-        self.find_winner(game)
+            self.player_wins.append(game.player.hands[h].winner)
+            self.draws.append(game.player.hands[h].draw)
 
         self.last_game = game
-
-    def find_winner(self, game):
-
-        for h in range(len(game.player.hands)):
-            if game.player.hands[h].is_bust:
-                self.player_wins.append(False)
-                if not game.house.hand.is_bust:
-                    self.house_wins.append(True)
-            else:
-                if game.house.hand.is_bust:
-                    self.house_wins.append(False)
-                    self.player_wins.append(True)
-                else:
-                    if game.house.hand.score > game.player.hands[h].score:
-                        self.house_wins.append(True)
-                        self.player_wins.append(False)
-                    else:
-                        if game.house.hand.score == game.player.hands[h].score:
-                            self.draws.append(True)
-                        else:
-                            self.house_wins.append(False)
-                            self.player_wins.append(True)
 
     def no_of_player_blackjacks(self):
 
@@ -117,6 +96,14 @@ class Log:
                 c = c + 1
         return c
 
+    def no_of_draws(self):
+
+        c = 0
+        for x in range(len(self.draws)):
+            if self.draws[x]:
+                c = c + 1
+        return c
+
     def print_log(self):
 
         print("\nSplits: ", (len(self.player_hands) - len(self.house_hands)))
@@ -125,7 +112,7 @@ class Log:
         print('Player BlackJacks: ', self.no_of_player_blackjacks())
         print('House BlackJacks: ', self.no_of_house_blackjacks())
         print('Player Wins: ', self.no_of_player_wins())
-        print('House Wins: ', self.no_of_house_wins())
+        print('Draws: ', self.no_of_draws())
         print('Player Busts: ', self.no_of_player_busts())
         print('House Busts: ', self.no_of_house_busts())
 

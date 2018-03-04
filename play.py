@@ -13,10 +13,11 @@ if __name__ == '__main__':
     allow_splitting = True
     # echo_game = False
     echo_game = True
+    # loop_for_condition = True
     loop_for_condition = False
 
-    purse_value = 500
-    bet_per_hand = 5
+    purse_value = 100
+    bet_per_hand = 1
 
     #Logging
     log = Log()
@@ -38,8 +39,10 @@ if __name__ == '__main__':
         newGame.dealer_stand_soft_17(newGame.house)
 
         this_game = Game(newGame.house, newGame.players[0])
+
+        newGame.find_winning_hands(this_game)
         log.log_game(this_game)
-        newGame.find_winner(this_game)
+
 
         if loop_for_condition:
             print("\rGames Played: {} Player Purse: {}".format(newGame.games_played, newGame.players[0].purse.value), end="")
@@ -58,7 +61,7 @@ if __name__ == '__main__':
 
         print("\nPress [Enter] to stop.")
 
-        while newGame.players[0].purse.value <= 2000:
+        while newGame.players[0].purse.value <= 1000:
 
             play()
 
